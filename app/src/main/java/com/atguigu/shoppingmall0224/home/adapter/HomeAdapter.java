@@ -1,6 +1,7 @@
 package com.atguigu.shoppingmall0224.home.adapter;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.atguigu.shoppingmall0224.home.utils.GlideImageLoader;
 import com.atguigu.shoppingmall0224.utils.Constants;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
+import com.zhy.magicviewpager.transformer.RotateYTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +80,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
     /**
      * 根据位置得到当前是什么类型
+     *
      * @param position
      * @return
      */
@@ -102,21 +105,19 @@ public class HomeAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         //全部写完的时候修改成6，只实现一个类型的话就返回1
-        return 2;
+        return 3;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == BANNER) {
             return new BannerViewHolder(mContext, inflater.inflate(R.layout.banner_viewpager, null));
-        }
-      else if (viewType == CHANNEL) {
+        } else if (viewType == CHANNEL) {
             return new ChannelViewHolder(mContext, inflater.inflate(R.layout.channel_item, null));
-        }
-         /*
-        else if (viewType == ACT) {
+        } else if (viewType == ACT) {
             return new ActViewHolder(mContext, inflater.inflate(R.layout.act_item, null));
-        } else if (viewType == SECKILL) {
+        }
+        /*else if (viewType == SECKILL) {
             return new SeckillViewHolder(mContext, inflater.inflate(R.layout.seckill_item, null));
         } else if (viewType == RECOMMEND) {
             return new RecommendViewHolder(mContext, inflater.inflate(R.layout.recommend_item, null));
@@ -133,17 +134,15 @@ public class HomeAdapter extends RecyclerView.Adapter {
             BannerViewHolder bannerViewHolder = (BannerViewHolder) holder;
             //设置数据Banner的数据
             bannerViewHolder.setData(result.getBanner_info());
-        }
-       else if (getItemViewType(position) == CHANNEL) {
+        } else if (getItemViewType(position) == CHANNEL) {
             ChannelViewHolder channelViewHolder = (ChannelViewHolder) holder;
             //绑定数据
             channelViewHolder.setData(result.getChannel_info());
-        }
-
-        /* else if (getItemViewType(position) == ACT) {
+        } else if (getItemViewType(position) == ACT) {
             ActViewHolder actViewHolder = (ActViewHolder) holder;
-            actViewHolder.setData(resultBean.getAct_info());
-        } else if (getItemViewType(position) == SECKILL) {
+            actViewHolder.setData(result.getAct_info());
+        }
+        /* else if (getItemViewType(position) == SECKILL) {
             SeckillViewHolder seckillViewHolder = (SeckillViewHolder) holder;
             seckillViewHolder.setData(resultBean.getSeckill_info());
         } else if (getItemViewType(position) == RECOMMEND) {
@@ -155,7 +154,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         }*/
     }
 
-    class BannerViewHolder extends RecyclerView.ViewHolder{
+    class BannerViewHolder extends RecyclerView.ViewHolder {
         private final Context mContext;
         private Banner banner;
 
@@ -168,8 +167,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
         public void setData(List<HomeBean.ResultBean.BannerInfoBean> banner_info) {
             //设置Banner 数据
             List<String> images = new ArrayList<>();
-            for(int i = 0; i < banner_info.size(); i++) {
-                images.add(Constants.BASE_URL_IMAGE+banner_info.get(i).getImage());
+            for (int i = 0; i < banner_info.size(); i++) {
+                images.add(Constants.BASE_URL_IMAGE + banner_info.get(i).getImage());
             }
 
             banner.setImages(images)
@@ -178,7 +177,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
                         @Override
                         public void OnBannerClick(int position) {
 
-                            Toast.makeText(mContext, "position=="+position, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
                         }
                     })
                     .start();
@@ -186,7 +185,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class ChannelViewHolder extends RecyclerView.ViewHolder{
+    class ChannelViewHolder extends RecyclerView.ViewHolder {
 
         private final Context mContext;
         private GridView gv;
@@ -199,7 +198,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         public void setData(final List<HomeBean.ResultBean.ChannelInfoBean> channel_info) {
             //设置适配器
-            ChannelAdapter adapter = new ChannelAdapter(mContext,channel_info);
+            ChannelAdapter adapter = new ChannelAdapter(mContext, channel_info);
             gv.setAdapter(adapter);
 
             //设置点击某一条的监听
@@ -207,7 +206,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     HomeBean.ResultBean.ChannelInfoBean channelInfoBean = channel_info.get(position);
-                    Toast.makeText(mContext, ""+channelInfoBean.getChannel_name(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "" + channelInfoBean.getChannel_name(), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -215,6 +214,39 @@ public class HomeAdapter extends RecyclerView.Adapter {
         }
     }
 
+    class ActViewHolder extends RecyclerView.ViewHolder {
+
+        private final Context mContext;
+        private ViewPager act_viewpager;
+
+        public ActViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            this.mContext = mContext;
+            act_viewpager = (ViewPager) itemView.findViewById(R.id.act_viewpager);
+        }
+
+        public void setData(final List<HomeBean.ResultBean.ActInfoBean> act_info) {
+            //设置ViewPager的适配器
+            ViewPagerAdapter adapter = new ViewPagerAdapter(mContext,act_info);
+            act_viewpager.setAdapter(adapter);
+            //设置间距
+            act_viewpager.setPageMargin(20);
+            act_viewpager.setPageTransformer(true, new
+                    RotateYTransformer());
+
+            //设置点击事件
+            adapter.setOnItemClickListener(new ViewPagerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    HomeBean.ResultBean.ActInfoBean actInfoBean = act_info.get(position);
+                    Toast.makeText(mContext, ""+actInfoBean.getName(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+
+        }
+    }
 
 
 }
