@@ -7,13 +7,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.base.BaseFragment;
+import com.atguigu.shoppingmall0224.home.bean.HomeBean;
+import com.atguigu.shoppingmall0224.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
 
 /**
  * 作者：杨光福 on 2017/6/12 10:29
@@ -33,6 +39,7 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.ib_top)
     ImageButton ibTop;
     Unbinder unbinder;
+    private String homeUrl;
 
     /**
      * 初始化控件
@@ -50,8 +57,39 @@ public class HomeFragment extends BaseFragment {
     public void initData() {
         super.initData();
         Log.e(TAG, "绑定数据到控件上...");
+        getDataFromNet();
     }
 
+    private void getDataFromNet() {
+        homeUrl = Constants.HOME_URL;
+        OkHttpUtils
+                .get()
+                .url(homeUrl)
+                .build()
+                .execute(new MyStringCallback());
+    }
+
+
+    class MyStringCallback extends StringCallback {
+
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            Log.e(TAG,"请求成功失败=="+e.getMessage());
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            Log.e(TAG,"请求成功==");
+            processData(response);
+
+        }
+    }
+
+    private void processData(String json) {
+        //解析数据
+        HomeBean homeBean = JSON.parseObject(json,HomeBean.class);
+        Log.e(TAG,"解析成功了=="+homeBean.getResult().getAct_info().get(0).getName());
+    }
 
 
     @Override
