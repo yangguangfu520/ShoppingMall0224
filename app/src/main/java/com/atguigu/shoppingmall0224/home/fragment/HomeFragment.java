@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall0224.home.fragment;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.base.BaseFragment;
+import com.atguigu.shoppingmall0224.home.adapter.HomeAdapter;
 import com.atguigu.shoppingmall0224.home.bean.HomeBean;
 import com.atguigu.shoppingmall0224.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -40,6 +42,7 @@ public class HomeFragment extends BaseFragment {
     ImageButton ibTop;
     Unbinder unbinder;
     private String homeUrl;
+    private HomeAdapter adapter;
 
     /**
      * 初始化控件
@@ -74,12 +77,12 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public void onError(Call call, Exception e, int id) {
-            Log.e(TAG,"请求成功失败=="+e.getMessage());
+            Log.e(TAG, "请求成功失败==" + e.getMessage());
         }
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e(TAG,"请求成功==");
+            Log.e(TAG, "请求成功==");
             processData(response);
 
         }
@@ -87,8 +90,16 @@ public class HomeFragment extends BaseFragment {
 
     private void processData(String json) {
         //解析数据
-        HomeBean homeBean = JSON.parseObject(json,HomeBean.class);
-        Log.e(TAG,"解析成功了=="+homeBean.getResult().getAct_info().get(0).getName());
+        HomeBean homeBean = JSON.parseObject(json, HomeBean.class);
+        Log.e(TAG, "解析成功了==" + homeBean.getResult().getAct_info().get(0).getName());
+
+        //设置适配器
+        adapter = new HomeAdapter(mContext,homeBean.getResult());
+        rvHome.setAdapter(adapter);
+
+        //设置布局管理器
+        LinearLayoutManager liner = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        rvHome.setLayoutManager(liner);
     }
 
 
