@@ -1,4 +1,4 @@
-package com.atguigu.shoppingmall0224;
+package com.atguigu.shoppingmall0224.app;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 
+import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.home.activity.MainActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
