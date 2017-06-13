@@ -1,6 +1,7 @@
 package com.atguigu.shoppingmall0224.home.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -252,7 +253,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
         }
     }
 
-
+    private boolean isFrist = false;
     class SeckillViewHolder extends RecyclerView.ViewHolder {
         private final Context mContext;
         @BindView(R.id.countdownview)
@@ -261,6 +262,9 @@ public class HomeAdapter extends RecyclerView.Adapter {
         TextView tvMoreSeckill;
         @BindView(R.id.rv_seckill)
         RecyclerView rvSeckill;
+        Handler mHandler = new Handler();
+        private HomeBean.ResultBean.SeckillInfoBean seckillInfo;
+
 
         public SeckillViewHolder(Context mContext, View itemView) {
             super(itemView);
@@ -269,22 +273,68 @@ public class HomeAdapter extends RecyclerView.Adapter {
         }
 
         public void setData(final HomeBean.ResultBean.SeckillInfoBean seckill_info) {
+            this.seckillInfo = seckill_info;
+                //1.设置适配器
+                SeckillRecyclerViewAdapter adapter = new SeckillRecyclerViewAdapter(mContext,seckill_info.getList());
+                rvSeckill.setAdapter(adapter);
+                //2.设置布局管理器
+                rvSeckill.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
+                //设置item的点击事件的监听
+                adapter.setOnItemClickListener(new SeckillRecyclerViewAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        Toast.makeText(mContext, ""+seckill_info.getList().get(position).getCover_price(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-            //1.设置适配器
-            SeckillRecyclerViewAdapter adapter = new SeckillRecyclerViewAdapter(mContext,seckill_info.getList());
-            rvSeckill.setAdapter(adapter);
-            //2.设置布局管理器
-            rvSeckill.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
-            //设置item的点击事件的监听
-            adapter.setOnItemClickListener(new SeckillRecyclerViewAdapter.OnItemClickListener() {
-                @Override
-               public void onItemClick(int position) {
-                    Toast.makeText(mContext, ""+seckill_info.getList().get(position).getCover_price(), Toast.LENGTH_SHORT).show();
-                }
-            });
+
+            if (!isFrist) {
+                isFrist = true;
+                //计算倒计时持续的时间
+                long totalTime = Long.parseLong(seckillInfo.getEnd_time()) - Long.parseLong(seckillInfo.getStart_time());
+
+                // 校对倒计时
+                long curTime = System.currentTimeMillis();
+                //重新设置结束数据时间
+                seckillInfo.setEnd_time((curTime + totalTime + ""));
+                //开始刷新
+                startRefreshTime();
+
+            }
+
+
 
         }
+
+
+        /**
+         * 开始刷新
+         */
+        void startRefreshTime() {
+            mHandler.postDelayed(mRefreshTimeRunnable, 10);
+        }
+
+        Runnable mRefreshTimeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                //得到当前时间
+                long currentTime = System.currentTimeMillis();
+
+                if (currentTime >= Long.parseLong(seckillInfo.getEnd_time())) {
+                    // 倒计时结束
+                    mHandler.removeCallbacksAndMessages(null);
+                } else {
+                    //更新时间
+                    countdownview.updateShow(Long.parseLong(seckillInfo.getEnd_time()) - currentTime);
+                    //每隔1000毫秒更新一次
+                    mHandler.postDelayed(mRefreshTimeRunnable, 1000);
+                }
+
+            }
+        };
     }
+
+
 
 
 }
