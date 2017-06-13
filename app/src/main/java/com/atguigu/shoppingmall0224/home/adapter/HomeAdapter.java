@@ -1,6 +1,7 @@
 package com.atguigu.shoppingmall0224.home.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.shoppingmall0224.R;
+import com.atguigu.shoppingmall0224.app.GoodsInfoActivity;
 import com.atguigu.shoppingmall0224.home.bean.HomeBean;
 import com.atguigu.shoppingmall0224.home.utils.GlideImageLoader;
 import com.atguigu.shoppingmall0224.home.view.MyGridView;
@@ -380,11 +382,21 @@ public class HomeAdapter extends RecyclerView.Adapter {
             ButterKnife.bind(this,itemView);
         }
 
-        public void setData(List<HomeBean.ResultBean.HotInfoBean> hot_info) {
+        public void setData(final List<HomeBean.ResultBean.HotInfoBean> hot_info) {
 
             //设置适配器
             HotGridViewAdapter adapter = new HotGridViewAdapter(mContext,hot_info);
             gvHot.setAdapter(adapter);
+            //设置item的点击事件
+            gvHot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, ""+hot_info.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
 
 
         }
