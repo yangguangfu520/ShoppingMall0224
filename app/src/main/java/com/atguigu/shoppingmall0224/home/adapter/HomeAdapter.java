@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.app.GoodsInfoActivity;
+import com.atguigu.shoppingmall0224.home.bean.GoodsBean;
 import com.atguigu.shoppingmall0224.home.bean.HomeBean;
 import com.atguigu.shoppingmall0224.home.utils.GlideImageLoader;
 import com.atguigu.shoppingmall0224.home.view.MyGridView;
@@ -39,6 +40,8 @@ import cn.iwgang.countdownview.CountdownView;
  */
 
 public class HomeAdapter extends RecyclerView.Adapter {
+
+    public static final String GOODS_BEAN = "goods_bean";
     /*
     上下文
      */
@@ -393,7 +396,15 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Toast.makeText(mContext, ""+hot_info.get(position).getName(), Toast.LENGTH_SHORT).show();
 
+                    HomeBean.ResultBean.HotInfoBean hotInfoBean =   hot_info.get(position);
+                    //传递数据
+                    GoodsBean goodsBean = new GoodsBean();
+                    goodsBean.setName(hotInfoBean.getName());
+                    goodsBean.setCover_price(hotInfoBean.getCover_price());
+                    goodsBean.setFigure(hotInfoBean.getFigure());
+                    goodsBean.setProduct_id(hotInfoBean.getProduct_id());
                     Intent intent = new Intent(mContext, GoodsInfoActivity.class);
+                    intent.putExtra(GOODS_BEAN,goodsBean);
                     mContext.startActivity(intent);
                 }
             });
