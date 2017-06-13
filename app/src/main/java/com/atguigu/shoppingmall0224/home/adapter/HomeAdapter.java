@@ -77,6 +77,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
      */
     public int currentType = BANNER;
 
+
     private LayoutInflater inflater;
 
     public HomeAdapter(Context mContext, HomeBean.ResultBean result) {
@@ -113,7 +114,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         //全部写完的时候修改成6，只实现一个类型的话就返回1
-        return 4;
+        return 5;
     }
 
     @Override
@@ -126,9 +127,10 @@ public class HomeAdapter extends RecyclerView.Adapter {
             return new ActViewHolder(mContext, inflater.inflate(R.layout.act_item, null));
         } else if (viewType == SECKILL) {
             return new SeckillViewHolder(mContext, inflater.inflate(R.layout.seckill_item, null));
-        } /*else if (viewType == RECOMMEND) {
+        } else if (viewType == RECOMMEND) {
             return new RecommendViewHolder(mContext, inflater.inflate(R.layout.recommend_item, null));
-        } else if (viewType == HOT) {
+        }
+        /*else if (viewType == HOT) {
             return new HotViewHolder(mContext, inflater.inflate(R.layout.hot_item, null));
         }*/
 
@@ -151,10 +153,10 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (getItemViewType(position) == SECKILL) {
             SeckillViewHolder seckillViewHolder = (SeckillViewHolder) holder;
             seckillViewHolder.setData(result.getSeckill_info());
-        } /* else if (getItemViewType(position) == RECOMMEND) {
+        } else if (getItemViewType(position) == RECOMMEND) {
             RecommendViewHolder recommendViewHolder = (RecommendViewHolder) holder;
-            recommendViewHolder.setData(resultBean.getRecommend_info());
-        } else if (getItemViewType(position) == HOT) {
+            recommendViewHolder.setData(result.getRecommend_info());
+        } /*else if (getItemViewType(position) == HOT) {
             HotViewHolder hotViewHolder = (HotViewHolder) holder;
             hotViewHolder.setData(resultBean.getHot_info());
         }*/
@@ -254,6 +256,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
     }
 
     private boolean isFrist = false;
+
     class SeckillViewHolder extends RecyclerView.ViewHolder {
         private final Context mContext;
         @BindView(R.id.countdownview)
@@ -269,23 +272,23 @@ public class HomeAdapter extends RecyclerView.Adapter {
         public SeckillViewHolder(Context mContext, View itemView) {
             super(itemView);
             this.mContext = mContext;
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         public void setData(final HomeBean.ResultBean.SeckillInfoBean seckill_info) {
             this.seckillInfo = seckill_info;
-                //1.设置适配器
-                SeckillRecyclerViewAdapter adapter = new SeckillRecyclerViewAdapter(mContext,seckill_info.getList());
-                rvSeckill.setAdapter(adapter);
-                //2.设置布局管理器
-                rvSeckill.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
-                //设置item的点击事件的监听
-                adapter.setOnItemClickListener(new SeckillRecyclerViewAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Toast.makeText(mContext, ""+seckill_info.getList().get(position).getCover_price(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            //1.设置适配器
+            SeckillRecyclerViewAdapter adapter = new SeckillRecyclerViewAdapter(mContext, seckill_info.getList());
+            rvSeckill.setAdapter(adapter);
+            //2.设置布局管理器
+            rvSeckill.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            //设置item的点击事件的监听
+            adapter.setOnItemClickListener(new SeckillRecyclerViewAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    Toast.makeText(mContext, "" + seckill_info.getList().get(position).getCover_price(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
 
             if (!isFrist) {
@@ -301,7 +304,6 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 startRefreshTime();
 
             }
-
 
 
         }
@@ -335,6 +337,35 @@ public class HomeAdapter extends RecyclerView.Adapter {
     }
 
 
+    class RecommendViewHolder extends RecyclerView.ViewHolder {
+        private final Context mContext;
+        @BindView(R.id.tv_more_recommend)
+        TextView tvMoreRecommend;
+        @BindView(R.id.gv_recommend)
+        GridView gvRecommend;
+
+        public RecommendViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            this.mContext = mContext;
+            ButterKnife.bind(this,itemView);
+
+        }
+
+        public void setData(final List<HomeBean.ResultBean.RecommendInfoBean> recommend_info) {
+            //1.设置适配器
+            RecommendGridViewAdapter adapter = new RecommendGridViewAdapter(mContext,recommend_info);
+            gvRecommend.setAdapter(adapter);
+
+            //设置item的点击事件
+            gvRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, ""+recommend_info.get(position).getName(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
 
 
 }
