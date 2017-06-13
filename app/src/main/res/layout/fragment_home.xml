@@ -25,6 +25,6 @@
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/top_btn"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>
