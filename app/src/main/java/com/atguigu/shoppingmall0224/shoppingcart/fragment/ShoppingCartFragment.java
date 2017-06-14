@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall0224.shoppingcart.fragment;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.app.MyApplication;
 import com.atguigu.shoppingmall0224.base.BaseFragment;
 import com.atguigu.shoppingmall0224.home.bean.GoodsBean;
+import com.atguigu.shoppingmall0224.shoppingcart.adapter.ShoppingCartAdapter;
 import com.atguigu.shoppingmall0224.shoppingcart.utils.CartStorage;
 
 import java.util.ArrayList;
@@ -59,6 +61,7 @@ public class ShoppingCartFragment extends BaseFragment {
     @BindView(R.id.ll_empty_shopcart)
     LinearLayout llEmptyShopcart;
     Unbinder unbinder;
+    private ArrayList<GoodsBean> datas;
 
     /**
      * 初始化控件
@@ -76,11 +79,23 @@ public class ShoppingCartFragment extends BaseFragment {
     public void initData() {
         super.initData();
         Log.e(TAG, "绑定数据到控件上...");
-        ArrayList<GoodsBean> allData = CartStorage.getInstance(MyApplication.getContext()).getAllData();
-        for (int i = 0; i < allData.size(); i++) {
-            Log.e("TAG", "" + allData.get(i).toString());
+        datas = CartStorage.getInstance(MyApplication.getContext()).getAllData();
+        if(datas != null && datas.size() >0){
 
+            //有数据-空布局隐藏
+            llEmptyShopcart.setVisibility(View.GONE);
+            //设置适配器
+            ShoppingCartAdapter adapter = new ShoppingCartAdapter(mContext,datas);
+            recyclerview.setAdapter(adapter);
+            //设置布局管理器
+            recyclerview.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
+
+
+        }else{
+            //没有数据-空布局显示
+            llEmptyShopcart.setVisibility(View.VISIBLE);
         }
+
     }
 
 
