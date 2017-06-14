@@ -44,6 +44,19 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            //设置item的点击事件的监听
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //状态取反
+                    GoodsBean goodsBean = datas.get(getLayoutPosition());
+                    goodsBean.setCheck(!goodsBean.isCheck());
+
+                    //刷新适配器
+                    notifyItemChanged(getLayoutPosition());
+
+                }
+            });
         }
     }
 
@@ -63,12 +76,19 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
 //1.更加位置得到数据
         GoodsBean goodsBean = datas.get(position);
+
         //2.绑定数据
+        holder.cbGov.setChecked(goodsBean.isCheck());
         //图片
         Glide.with(context).load(Constants.BASE_URL_IMAGE + goodsBean.getFigure()).into(holder.ivGov);
         holder.tvDescGov.setText(goodsBean.getName());
         //设置价格
         holder.tvPriceGov.setText("￥" + goodsBean.getCover_price());
+
+        holder.AddSubView.setValue(goodsBean.getNumber());
+        holder.AddSubView.setMinValue(1);
+        //库存
+        holder.AddSubView.setMaxValue(20);
 
     }
 

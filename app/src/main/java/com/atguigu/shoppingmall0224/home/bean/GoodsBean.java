@@ -24,6 +24,15 @@ public class GoodsBean implements Serializable{
     private String name;
     private String product_id;
     private int number = 1;
+    private boolean isCheck =true;
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
 
     public int getNumber() {
         return number;
