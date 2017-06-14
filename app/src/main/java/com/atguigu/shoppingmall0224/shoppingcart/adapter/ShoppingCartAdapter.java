@@ -61,10 +61,41 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
                     //重新显示总价格
                     showTotalPrice();
+                    //校验是否全选
+                    checkAll();
 
                 }
             });
         }
+    }
+
+    private void checkAll() {
+        if(datas != null && datas.size() >0){
+            int number = 0;
+
+            for(int i = 0; i < datas.size(); i++) {
+                GoodsBean goodsBean = datas.get(i);
+                //只要有一个不选中就设置非全选
+                if(!goodsBean.isCheck()){
+                    cbAll.setChecked(false);
+                    checkboxAll.setChecked(false);
+                }else{
+                    number ++;
+                }
+            }
+
+            if(number ==datas.size()){
+                cbAll.setChecked(true);
+                checkboxAll.setChecked(true);
+            }
+
+
+        }else {
+            //没有数据
+            cbAll.setChecked(false);
+            checkboxAll.setChecked(false);
+        }
+
     }
 
     public ShoppingCartAdapter(Context mContext, ArrayList<GoodsBean> datas, CheckBox checkboxAll, TextView tvShopcartTotal, CheckBox cbAll) {
@@ -74,6 +105,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         this.tvShopcartTotal = tvShopcartTotal;
         this.cbAll = cbAll;
         showTotalPrice();
+        checkAll();
     }
 
     public void showTotalPrice() {
