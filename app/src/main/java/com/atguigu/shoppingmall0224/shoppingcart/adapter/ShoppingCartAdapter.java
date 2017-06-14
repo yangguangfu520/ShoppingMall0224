@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.home.bean.GoodsBean;
+import com.atguigu.shoppingmall0224.shoppingcart.utils.CartStorage;
 import com.atguigu.shoppingmall0224.utils.Constants;
 import com.bumptech.glide.Glide;
 
@@ -31,6 +32,8 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     private final CheckBox checkboxAll;
     private final TextView tvShopcartTotal;
     private final CheckBox cbAll;
+
+
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -85,7 +88,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     }
 
-    private void checkAll() {
+    public void checkAll() {
         if(datas != null && datas.size() >0){
             int number = 0;
 
@@ -174,5 +177,27 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     @Override
     public int getItemCount() {
         return datas == null ? 0 : datas.size();
+    }
+
+
+    public void deleteData() {
+
+        if(datas != null && datas.size() > 0){
+
+            for(int i = 0; i < datas.size(); i++) {
+
+                GoodsBean goodsBean = datas.get(i);
+                if(goodsBean.isCheck()){
+                    datas.remove(goodsBean);
+                    //同步到本地
+                    CartStorage.getInstance(context).deleteData(goodsBean);
+                    notifyItemRemoved(i);
+                    i--;
+                }
+            }
+
+
+
+        }
     }
 }
