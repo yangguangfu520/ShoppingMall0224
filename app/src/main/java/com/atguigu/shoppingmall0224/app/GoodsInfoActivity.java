@@ -195,14 +195,13 @@ public class GoodsInfoActivity extends AppCompatActivity {
         }
     }
 
-    private GoodsBean tempGoodBean;
 
     /**
      * 显示popupWindow
      */
     private void showPopwindow() {
 
-        tempGoodBean = CartStorage.getInstance(MyApplication.getContext()).findData(Integer.parseInt(goodsBean.getProduct_id()));
+//        tempGoodBean = CartStorage.getInstance(MyApplication.getContext()).findData(Integer.parseInt(goodsBean.getProduct_id()));
 
         // 1 利用layoutInflater获得View
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -237,23 +236,23 @@ public class GoodsInfoActivity extends AppCompatActivity {
         Glide.with(GoodsInfoActivity.this).load(Constants.BASE_URL_IMAGE + goodsBean.getFigure()).into(iv_goodinfo_photo);
 
         // 名称
-        tv_goodinfo_name.setText(tempGoodBean.getName());
+        tv_goodinfo_name.setText(goodsBean.getName());
         // 显示价格
-        tv_goodinfo_price.setText(tempGoodBean.getCover_price());
+        tv_goodinfo_price.setText(goodsBean.getCover_price());
 
         // 设置最大值和当前值
         nas_goodinfo_num.setMaxValue(100);
         //内存数据
-        tempGoodBean.setNumber(1);
+        goodsBean.setNumber(1);
         //显示的
-        nas_goodinfo_num.setValue(tempGoodBean.getNumber());
+        nas_goodinfo_num.setValue(goodsBean.getNumber());
 
 
 
         nas_goodinfo_num.setOnNumberChangeListener(new AddSubView.OnNumberChangeListener() {
             @Override
             public void onNumberChange(int value) {
-                tempGoodBean.setNumber(value);
+                goodsBean.setNumber(value);
             }
         });
 
@@ -269,8 +268,8 @@ public class GoodsInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 window.dismiss();
                 //添加购物车
-                CartStorage.getInstance(MyApplication.getContext()).addData(tempGoodBean);
-                Log.e("TAG", "66:" + tempGoodBean.toString());
+                CartStorage.getInstance(MyApplication.getContext()).addData(goodsBean);
+                Log.e("TAG", "66:" + goodsBean.toString());
                 Toast.makeText(GoodsInfoActivity.this, "添加购物车成功", Toast.LENGTH_SHORT).show();
             }
         });
