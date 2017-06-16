@@ -2,6 +2,7 @@ package com.atguigu.shoppingmall0224.type.fragment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.atguigu.shoppingmall0224.R;
@@ -43,6 +44,18 @@ public class ListFragment extends BaseFragment {
         //设置坐标ListView的适配器
         typeLeftAdapter = new TypeLeftAdapter(mContext,titles);
         lvLeft.setAdapter(typeLeftAdapter);
+
+        //设置监听点击ListView的item的点击事件，并且点击的时候变效果
+        lvLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //1.记录点击的位置
+                typeLeftAdapter.changeSelectPosition(position);
+                //2.适配器刷新
+                typeLeftAdapter.notifyDataSetChanged();//getView
+
+            }
+        });
     }
 
     @Override
