@@ -99,7 +99,7 @@ public class CartStorage {
         GoodsBean temp = sparseArray.get(Integer.parseInt(bean.getProduct_id()));
         if (temp != null) {
             //存在，就修改
-            temp.setNumber(bean.getNumber());
+            temp.setNumber(bean.getNumber()+temp.getNumber());
         } else {
             //如果不存在，保存到内存中
             temp = bean;
@@ -167,4 +167,18 @@ public class CartStorage {
     }
 
 
+    public GoodsBean findData(int id) {
+        GoodsBean goodsBean = sparseArray.get(id);
+
+
+        GoodsBean newgoodsBean = new GoodsBean();
+        newgoodsBean.setCheck(goodsBean.isCheck());
+        newgoodsBean.setNumber(goodsBean.getNumber());
+        newgoodsBean.setFigure(goodsBean.getFigure());
+        newgoodsBean.setProduct_id(goodsBean.getProduct_id());
+        newgoodsBean.setCover_price(goodsBean.getCover_price());
+        newgoodsBean.setName(goodsBean.getName());
+
+        return newgoodsBean;
+    }
 }

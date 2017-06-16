@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.atguigu.shoppingmall0224.R;
+import com.atguigu.shoppingmall0224.app.MyApplication;
 import com.atguigu.shoppingmall0224.home.bean.GoodsBean;
 import com.atguigu.shoppingmall0224.shoppingcart.utils.CartStorage;
+import com.atguigu.shoppingmall0224.shoppingcart.view.AddSubView;
 import com.atguigu.shoppingmall0224.utils.Constants;
 import com.bumptech.glide.Glide;
 
@@ -156,7 +158,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 //1.更加位置得到数据
-        GoodsBean goodsBean = datas.get(position);
+        final GoodsBean goodsBean = datas.get(position);
 
         //2.绑定数据
         holder.cbGov.setChecked(goodsBean.isCheck());
@@ -170,6 +172,15 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.AddSubView.setMinValue(1);
         //库存
         holder.AddSubView.setMaxValue(20);
+        holder.AddSubView.setOnNumberChangeListener(new AddSubView.OnNumberChangeListener() {
+            @Override
+            public void onNumberChange(int number) {
+                //把Bean对象更新一下
+                goodsBean.setNumber(number);
+                //更新存储到本地或者服务器上
+                CartStorage.getInstance(MyApplication.getContext()).updateData(goodsBean);
+            }
+        });
 
     }
 
