@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall0224.shoppingcart.fragment;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.app.MyApplication;
 import com.atguigu.shoppingmall0224.base.BaseFragment;
+import com.atguigu.shoppingmall0224.home.activity.MainActivity;
 import com.atguigu.shoppingmall0224.home.bean.GoodsBean;
 import com.atguigu.shoppingmall0224.shoppingcart.adapter.ShoppingCartAdapter;
 import com.atguigu.shoppingmall0224.shoppingcart.utils.CartStorage;
@@ -167,7 +169,10 @@ public class ShoppingCartFragment extends BaseFragment {
                 Toast.makeText(mContext, "收藏", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_empty_cart_tobuy:
-                Toast.makeText(mContext, "去逛逛", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "去逛逛", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, MainActivity.class);
+                intent.putExtra("checkid",R.id.rb_home);
+                startActivity(intent);
                 break;
         }
     }

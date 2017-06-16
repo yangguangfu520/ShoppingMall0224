@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall0224.app;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.shoppingmall0224.R;
+import com.atguigu.shoppingmall0224.home.activity.MainActivity;
 import com.atguigu.shoppingmall0224.home.adapter.HomeAdapter;
 import com.atguigu.shoppingmall0224.home.bean.GoodsBean;
 import com.atguigu.shoppingmall0224.shoppingcart.utils.CartStorage;
@@ -156,7 +158,10 @@ public class GoodsInfoActivity extends AppCompatActivity {
                 Toast.makeText(GoodsInfoActivity.this, "收藏", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_good_info_cart:
-                Toast.makeText(GoodsInfoActivity.this, "购物车", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(GoodsInfoActivity.this, "购物车", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(GoodsInfoActivity.this, MainActivity.class);
+                intent.putExtra("checkid",R.id.rb_cart);
+                startActivity(intent);
                 break;
             case R.id.btn_good_info_addcart:
                 Toast.makeText(GoodsInfoActivity.this, "添加到购物车", Toast.LENGTH_SHORT).show();
