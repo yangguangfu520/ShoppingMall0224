@@ -172,6 +172,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
                 Intent intent = new Intent(GoodsInfoActivity.this, MainActivity.class);
                 intent.putExtra("checkid", R.id.rb_cart);
                 startActivity(intent);
+
                 break;
             case R.id.btn_good_info_addcart:
 //                Toast.makeText(GoodsInfoActivity.this, "添加到购物车", Toast.LENGTH_SHORT).show();

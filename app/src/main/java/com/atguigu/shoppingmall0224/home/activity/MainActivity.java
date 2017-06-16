@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.rg_main)
     RadioGroup rgMain;
 
+
     /**
      * Fragment的集合
      */
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+
+
         //初始多个页面对应的Fragment并且设置默认的Fragment页面
         initFragment();
 
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         //设置默认选择首页
         rgMain.check(R.id.rb_home);
+
     }
 
     class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener{
@@ -139,5 +143,9 @@ public class MainActivity extends AppCompatActivity {
             //选中购物车
             rgMain.check(R.id.rb_cart);
         }
+    }
+
+    public RadioGroup getRgMain(){
+        return rgMain;
     }
 }
