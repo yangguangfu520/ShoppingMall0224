@@ -1,8 +1,12 @@
 package com.atguigu.shoppingmall0224.community.fragment;
 
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -34,6 +38,9 @@ public class CommunityFragment extends BaseFragment {
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     Unbinder unbinder;
+    @BindView(R.id.tablayout)
+    TabLayout tablayout;
+    Unbinder unbinder1;
     private ArrayList<BaseFragment> fragments;
     private CommunityViewPagerAdapter pagerAdapter;
 
@@ -59,8 +66,10 @@ public class CommunityFragment extends BaseFragment {
 
         MainActivity mainActivity = (MainActivity) mContext;
         //设置适配器
-        pagerAdapter = new CommunityViewPagerAdapter(mainActivity.getSupportFragmentManager(),fragments);
+        pagerAdapter = new CommunityViewPagerAdapter(mainActivity.getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);
+
+        tablayout.setupWithViewPager(viewPager);
     }
 
 
@@ -80,5 +89,13 @@ public class CommunityFragment extends BaseFragment {
                 Toast.makeText(mContext, "消息", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        unbinder1 = ButterKnife.bind(this, rootView);
+        return rootView;
     }
 }
