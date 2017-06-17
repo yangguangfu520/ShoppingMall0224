@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall0224.type.fragment;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -10,10 +11,13 @@ import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.base.BaseFragment;
 import com.atguigu.shoppingmall0224.type.adapter.TypeLeftAdapter;
+import com.atguigu.shoppingmall0224.type.adapter.TypeRightAdapter;
 import com.atguigu.shoppingmall0224.type.bean.TypeBean;
 import com.atguigu.shoppingmall0224.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +46,11 @@ public class ListFragment extends BaseFragment {
     private String[] urls = new String[]{Constants.SKIRT_URL, Constants.JACKET_URL, Constants.PANTS_URL, Constants.OVERCOAT_URL,
             Constants.ACCESSORY_URL, Constants.BAG_URL, Constants.DRESS_UP_URL, Constants.HOME_PRODUCTS_URL, Constants.STATIONERY_URL,
             Constants.DIGIT_URL, Constants.GAME_URL};
+    /**
+     * 右侧的数据
+     */
+    private List<TypeBean.ResultBean> result;
+    private TypeRightAdapter rightAdapter;
 
 
     @Override
@@ -55,7 +64,7 @@ public class ListFragment extends BaseFragment {
     public void initData() {
         super.initData();
         //设置坐标ListView的适配器
-        typeLeftAdapter = new TypeLeftAdapter(mContext,titles);
+        typeLeftAdapter = new TypeLeftAdapter(mContext, titles);
         lvLeft.setAdapter(typeLeftAdapter);
 
         //设置监听点击ListView的item的点击事件，并且点击的时候变效果
@@ -76,7 +85,7 @@ public class ListFragment extends BaseFragment {
     }
 
     private void getDataFromNet(String url) {
-        System.out.println("url=="+url);
+        System.out.println("url==" + url);
         OkHttpUtils
                 .get()
                 .url(url)
@@ -93,16 +102,38 @@ public class ListFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response, int id) {
-            Log.e(TAG, "请求成功=="+response);
+            Log.e(TAG, "请求成功==" + response);
             processData(response);
 
         }
     }
 
     private void processData(String json) {
-        TypeBean typeBean = JSON.parseObject(json,TypeBean.class);
+        TypeBean typeBean = JSON.parseObject(json, TypeBean.class);
 
-        Log.e("TAG","解析成功=="+ typeBean.getResult().get(0).getName());
+        Log.e("TAG", "解析成功==" + typeBean.getResult().get(0).getName());
+        result = typeBean.getResult();
+        if(result != null && result.size() >0){
+            //有数据
+            //设置适配器
+            rightAdapter = new TypeRightAdapter(mContext,result);
+            rvRight.setAdapter(rightAdapter);
+
+            //设置布局管理器
+            GridLayoutManager gridLayout = new GridLayoutManager(mContext,3);
+            gridLayout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if(position ==0){
+                        return 3;
+                    }else{
+                        return 1;
+                    }
+                }
+            });
+            rvRight.setLayoutManager(gridLayout);
+
+        }
 
     }
 
