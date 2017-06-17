@@ -1,11 +1,22 @@
 package com.atguigu.shoppingmall0224.community.fragment;
 
-import android.graphics.Color;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import com.alibaba.fastjson.JSON;
+import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.base.BaseFragment;
+import com.atguigu.shoppingmall0224.community.adapter.HotPostListViewAdapter;
+import com.atguigu.shoppingmall0224.community.bean.HotPostBean;
+import com.atguigu.shoppingmall0224.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import okhttp3.Call;
 
 /**
  * 作者：杨光福 on 2017/6/17 11:43
@@ -15,7 +26,12 @@ import com.atguigu.shoppingmall0224.base.BaseFragment;
  */
 
 public class HotPostFragment extends BaseFragment {
-    private TextView textView;
+
+    private static final String TAG = HotPostFragment.class.getSimpleName();
+    @BindView(R.id.lv_hot_post)
+    ListView lvHotPost;
+    Unbinder unbinder;
+    private HotPostListViewAdapter adapter;
 
     /**
      * 初始化控件
@@ -23,16 +39,54 @@ public class HotPostFragment extends BaseFragment {
      */
     @Override
     public View initView() {
-        textView = new TextView(mContext);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(25);
-        textView.setTextColor(Color.RED);
-        return textView;
+        View rootView = View.inflate(mContext, R.layout.fragment_hot_post, null);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
     }
 
     @Override
     public void initData() {
         super.initData();
-        textView.setText("我是热帖内容");
+        getDataFromNet(Constants.HOT_POST_URL);
+    }
+
+    private void getDataFromNet(String url) {
+        System.out.println("url==" + url);
+        OkHttpUtils
+                .get()
+                .url(url)
+                .build()
+                .execute(new MyStringCallback());
+    }
+
+    class MyStringCallback extends StringCallback {
+
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            Log.e(TAG, "请求成功失败==" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            Log.e(TAG, "请求成功==" );
+            processData(response);
+
+        }
+    }
+
+    private void processData(String response) {
+        //解析数据
+        HotPostBean hotPostBean = JSON.parseObject(response,HotPostBean.class);
+        adapter = new HotPostListViewAdapter(mContext,hotPostBean.getResult());
+
+        lvHotPost.setAdapter(adapter);
+
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
