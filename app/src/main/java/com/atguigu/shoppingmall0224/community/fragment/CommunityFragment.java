@@ -1,12 +1,22 @@
 package com.atguigu.shoppingmall0224.community.fragment;
 
-import android.graphics.Color;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.atguigu.shoppingmall0224.R;
 import com.atguigu.shoppingmall0224.base.BaseFragment;
+import com.atguigu.shoppingmall0224.community.adapter.CommunityViewPagerAdapter;
+import com.atguigu.shoppingmall0224.home.activity.MainActivity;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * 作者：杨光福 on 2017/6/12 10:29
@@ -17,7 +27,15 @@ import com.atguigu.shoppingmall0224.base.BaseFragment;
 
 public class CommunityFragment extends BaseFragment {
     private static final String TAG = CommunityFragment.class.getSimpleName();//"CommunityFragment"
-    private TextView textView;
+    @BindView(R.id.ib_community_icon)
+    ImageButton ibCommunityIcon;
+    @BindView(R.id.ib_community_message)
+    ImageButton ibCommunityMessage;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    Unbinder unbinder;
+    private ArrayList<BaseFragment> fragments;
+    private CommunityViewPagerAdapter pagerAdapter;
 
     /**
      * 初始化控件
@@ -25,18 +43,42 @@ public class CommunityFragment extends BaseFragment {
      */
     @Override
     public View initView() {
-        Log.e(TAG,"初始化社区控件...");
-        textView = new TextView(mContext);
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(25);
-        textView.setTextColor(Color.RED);
-        return textView;
+        Log.e(TAG, "初始化社区控件...");
+        View rootView = View.inflate(mContext, R.layout.fragment_community, null);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
     }
 
     @Override
     public void initData() {
         super.initData();
-        Log.e(TAG,"绑定数据到控件上...");
-        textView.setText("我是社区内容");
+        Log.e(TAG, "绑定数据到控件上...");
+        fragments = new ArrayList<>();
+        fragments.add(new NewPostFragment());
+        fragments.add(new HotPostFragment());
+
+        MainActivity mainActivity = (MainActivity) mContext;
+        //设置适配器
+        pagerAdapter = new CommunityViewPagerAdapter(mainActivity.getSupportFragmentManager(),fragments);
+        viewPager.setAdapter(pagerAdapter);
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @OnClick({R.id.ib_community_icon, R.id.ib_community_message})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ib_community_icon:
+                Toast.makeText(mContext, "图片", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.ib_community_message:
+                Toast.makeText(mContext, "消息", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }
