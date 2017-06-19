@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall0224.user.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atguigu.shoppingmall0224.R;
+import com.atguigu.shoppingmall0224.app.LoginActivity;
 import com.atguigu.shoppingmall0224.base.BaseFragment;
 import com.hankkin.gradationscroll.GradationScrollView;
 
@@ -141,5 +143,7 @@ public class UserFragment extends BaseFragment {
 
     @OnClick(R.id.tv_username)
     public void onViewClicked() {
+        Intent  intent = new Intent(mContext,LoginActivity.class);
+        startActivity(intent);
     }
 }
